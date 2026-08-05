@@ -195,14 +195,18 @@ function render(v){
     if(hasCli){
       var comp2=clients.filter(function(c){return c[2]===1;}).length;
       var inc2=clients.length-comp2;
-      var sorted=clients.slice().sort(function(a,b){return a[2]-b[2];});
+      var sorted=clients.slice().sort(function(a,b){
+        var aComp=(a[2]===1)||(a[1]>=minVal&&minVal>0)?1:0;
+        var bComp=(b[2]===1)||(b[1]>=minVal&&minVal>0)?1:0;
+        return aComp-bComp;
+      });
       var rows=sorted.map(function(c){
         var ok=c[2]===1;
         var sold=c[1]||0;
         var adr=c[3]||'';
-        var borderL=ok?'#16a34a':sold>0?'#f59e0b':'#dc2626';
+        var borderL=ok||(sold>=minVal&&minVal>0)?'#16a34a':sold>0?'#f59e0b':'#dc2626';
         var rightTxt='',rightCol='';
-        if(ok){rightTxt='Completo \u2713';rightCol='#16a34a';}
+        if(ok||(sold>=minVal&&minVal>0)){rightTxt='Completo \u2713';rightCol='#16a34a';}
         else if(sold>0){rightTxt='Faltan '+(minVal-sold)+' u';rightCol='#d97706';}
         else{rightTxt='Sin compra';rightCol='#dc2626';}
         return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:0.5px solid #e8ecf4;border-left:3px solid '+borderL+';background:#fff">'
