@@ -181,17 +181,15 @@ function render(v){
     var hasCli=clients.length>0;
     var minVal=MINS[i];
     var isPesos=minVal===0;
+    var useOkOnly=COMBO_OK.indexOf(bkey)>=0;
     // Recalcular av desde clientes completos si el Excel subestima
-    if(hasCli&&!isPesos&&obj>0){
-      var compCount=clients.filter(function(c){return c[2]===1||((!useOkOnly&&c[1]>=(minVal||0)&&minVal>0));}).length;
+    if(hasCli&&!isPesos&&obj>0&&!useOkOnly){
+      var compCount=clients.filter(function(c){return c[2]===1||c[1]>=(minVal||0)&&minVal>0;}).length;
       var avFromCli=compCount/obj;
-      if(avFromCli>av) av=avFromCli;
-      col2=pc(av);
-      barW=Math.min(Math.round(av*100),100);
+      if(avFromCli>av){av=avFromCli;col2=pc(av);barW=Math.min(Math.round(av*100),100);}
     }
     var minLabel=isPesos?'':('<span style="font-size:10px;color:#888;background:#f0f2f8;border-radius:6px;padding:2px 6px;margin-left:6px">m\u00edn. '+minVal+' u</span>');
 
-    var useOkOnly=COMBO_OK.indexOf(bkey)>=0;
     var chips='';
     if(hasCli){
       var comp=clients.filter(function(c){return c[2]===1||((!useOkOnly&&c[1]>=minVal&&minVal>0));}).length;
